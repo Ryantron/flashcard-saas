@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import getStripe from "@/utils/get-stripe";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -9,16 +10,19 @@ import {
   Grid,
   Toolbar,
   Typography,
+  CircularProgress,
 } from "@mui/material";
+
 // Note: next/head replaced with new built-in SEO support
 // https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration#step-3-migrating-nexthead
 
-export const metadata = {
-  title: "Flashcard SaaS",
-  description: "Create flashcard from your text",
-};
+// export const metadata = {
+//   title: "Flashcard SaaS",
+//   description: "Create flashcard from your text",
+// };
 
 export default function Home() {
+  
   const handleSubmit = async () => {
     const checkoutSession = await fetch('/api/checkout_sessions', {
       method: 'POST',

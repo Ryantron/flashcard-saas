@@ -10,7 +10,6 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import Head from "next/head";
 // Note: next/head replaced with new built-in SEO support
 // https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration#step-3-migrating-nexthead
 

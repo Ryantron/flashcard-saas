@@ -4,42 +4,45 @@ import { Box, Grid, Card, CardContent, CardActionArea, Typography } from '@mui/m
 const Flashcards = ({ flashcards, flipped, handleCardClick }) => {
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" component="h2" gutterBottom>
-        Generated Flashcards
-      </Typography>
       <Grid container spacing={2}>
         {flashcards.map((flashcard, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
+            <Card sx={{ boxShadow: 'none' }}> {/* Removed box shadow from outer card */}
               <CardActionArea onClick={() => handleCardClick(index)}>
                 <CardContent>
                   <Box
                     sx={{
                       perspective: "1000px",
                       "& > div": {
-                        transition: "transform 0.4s",
-                        transformStyle: "preserve-3d",
                         position: "relative",
                         width: "100%",
                         height: "200px",
-                        boxShadow: "0 4px 8px 0 rgba(0,0,0, 0.2)",
+                        transformStyle: "preserve-3d",
                         transform: flipped[index]
                           ? "rotateY(180deg)"
-                          : "rotateY(0deg)", // Apply flip transformation based on state.
+                          : "rotateY(0deg)",
+                        transition: "transform 0.6s ease-in-out",
+                        borderRadius: 2, // Rounded borders for inner cards
                       },
                       "& > div > div": {
                         position: "absolute",
                         width: "100%",
                         height: "100%",
-                        backfaceVisibility: "hidden", // Hide the back of the card when flipped.
+                        backfaceVisibility: "hidden",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         padding: 2,
                         boxSizing: "border-box",
+                        color: "white", // Set text color to white
+                        borderRadius: 2, // Rounded borders for inner card sides
+                      },
+                      "& > div > div:nth-of-type(1)": {
+                        backgroundColor: "#284B63", // Front card color
                       },
                       "& > div > div:nth-of-type(2)": {
-                        transform: "rotateY(180deg)", // Rotate the back side of the card.
+                        backgroundColor: "#3C6E71", // Back card color
+                        transform: "rotateY(180deg)",
                       },
                     }}
                   >

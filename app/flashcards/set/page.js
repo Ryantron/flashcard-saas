@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Container, Typography, CircularProgress, Box } from '@mui/material';
 import { doc, getDoc } from 'firebase/firestore';
 import db from '@/firebase';
-import Flashcards from './flipable'; // Adjust the import path as needed
+import Flashcards from '@/components/flip-card';
 import { useUser } from '@clerk/nextjs'; // Import useUser from Clerk
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 
@@ -72,7 +72,7 @@ export default function FlashcardSetPage() {
   }
 
   return (
-    <Container maxWidth="md">
+    <Container>
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Flashcard Set: {id}

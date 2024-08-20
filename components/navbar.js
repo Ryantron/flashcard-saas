@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Link from 'next/link';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
@@ -44,7 +45,7 @@ function ResponsiveAppBar({ userPresent }) {
               textDecoration: 'none',
             }}
           >
-            Flashcard SASS
+            FC SaaS
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -79,26 +80,13 @@ function ResponsiveAppBar({ userPresent }) {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-              {!userPresent && (
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Button
-                    color="inherit"
-                    href="/sign-in"
-                    sx={{
-                      backgroundColor: '#3C6E71',
-                      color: 'white',
-                      borderRadius: '20px',
-                      padding: '8px 26px',
-                      '&:hover': {
-                        backgroundColor: '#3C6E71',
-                        opacity: 0.8
-                      }
-                    }}
-                  >
+              {userPresent && (<SignedOut>
+                <MenuItem>
+                  <Link href={'/sign-in'}>
                     Login
-                  </Button>
+                  </Link>
                 </MenuItem>
-              )}
+                </SignedOut>)}
             </Menu>
           </Box>
           <Typography
@@ -116,7 +104,7 @@ function ResponsiveAppBar({ userPresent }) {
               textDecoration: 'none',
             }}
           >
-            Flashcard SASS
+            FC SaaS
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -151,10 +139,10 @@ function ResponsiveAppBar({ userPresent }) {
                 Login
               </Button>
             </SignedOut>)}
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
           </Box>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </Toolbar>
       </Container>
     </AppBar>

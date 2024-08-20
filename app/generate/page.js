@@ -1,7 +1,5 @@
 "use client"; // This directive allows the component to run on the client side.
 
-// components/Generate.js
-
 import { useState } from 'react';
 import {
   Container,
@@ -14,12 +12,19 @@ import {
   DialogContentText,
   DialogContent,
   DialogActions,
+  IconButton,
+  Paper,
+  CircularProgress,
 } from '@mui/material';
 import { collection, doc, getDoc, writeBatch } from 'firebase/firestore';
 import db from '@/firebase';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import Flashcards from './flipable';
+import Flashcards from '@/components/flip-card';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import InputAdornment from '@mui/material/InputAdornment';
+import ResponsiveAppBar from "@/components/navbar";
+
 
 export default function Generate() {
   const [text, setText] = useState("");
@@ -27,6 +32,7 @@ export default function Generate() {
   const [flipped, setFlipped] = useState({});
   const [setName, setSetName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // State for loading
 
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
@@ -36,6 +42,8 @@ export default function Generate() {
       alert("Please enter some text to generate flashcards.");
       return;
     }
+
+    setLoading(true); // Set loading to true
 
     try {
       const response = await fetch("/api/generate", {
@@ -52,6 +60,8 @@ export default function Generate() {
     } catch (error) {
       console.error("Error generating flashcards:", error);
       alert("An error occurred while generating flashcards. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after completion
     }
   };
 
@@ -118,75 +128,125 @@ export default function Generate() {
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Generate Flashcards
-        </Typography>
-        <TextField
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          label="Enter text"
-          fullWidth
-          multiline
-          rows={4}
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          fullWidth
-        >
-          Generate Flashcards
-        </Button>
+    <Box>
+      <ResponsiveAppBar userPresent={true}/>
+      <Container>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', p: 2 }}>
+          <Typography variant="h4" gutterBottom>
+            Flashcard Generator
+          </Typography>
+          
+          {flashcards.length > 0 ? (
+            <Paper sx={{ flex: 1, p: 2, overflowY: 'auto', mb: 2, boxShadow: 'none' }}>
+              <Flashcards
+                flashcards={flashcards}
+                flipped={flipped}
+                handleCardClick={handleCardClick}
+              />
+              <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  sx={{ 
+                    backgroundColor: '#3C6E71', 
+                    borderRadius: 20,  // Rounder border
+                    '&:hover': { backgroundColor: '#2F575D' },
+                    px: 4,
+                    py: 1,
+                  }}
+                  onClick={handleOpenDialog}
+                >
+                  Save Flashcards
+                </Button>
+              </Box>
+            </Paper>
+          ) : (
+            <Paper sx={{ flex: 1, p: 2, overflowY: 'auto', mb: 2, boxShadow: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Typography variant="h6" sx={{ color: '#D9D9D9' }}>
+                What subject do you want to study up on?
+              </Typography>
+            </Paper>
+          )}
 
-        {flashcards.length > 0 && (
-          <Flashcards
-            flashcards={flashcards}
-            flipped={flipped}
-            handleCardClick={handleCardClick}
-          />
-        )}
-
-        {flashcards.length > 0 && (
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpenDialog}
-            >
-              Save Flashcards
-            </Button>
+          <Box sx={{ position: 'static', bottom: 0, left: 0, right: 0, p: 2, bgcolor: 'background.paper', display: 'flex', alignItems: 'center' }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !loading) handleSubmit();
+              }}
+              sx={{
+                borderRadius: 30,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 30,
+                  pl: 3,
+                  pr: 1,
+                },
+                '& .MuiOutlinedInput-notchedOutline.Mui-focused': {
+                  borderColor: '#3C6E71',
+                },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      color="primary"
+                      onClick={handleSubmit}
+                      disabled={loading} // Disable button while loading
+                      sx={{
+                        borderRadius: '50%',
+                        bgcolor: '#3C6E71',
+                        color: 'white',
+                        '&:hover': {
+                          bgcolor: '#2F575D',
+                        },
+                      }}
+                    >
+                      {loading ? (
+                        <CircularProgress size={24} sx={{ color: '#3C6E71' }} />
+                      ) : (
+                        <ArrowUpwardIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Box>
-        )}
-      </Box>
 
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>Save Flashcards</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Enter a name for your flashcard set:
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Set Name"
-            fullWidth
-            value={setName}
-            onChange={(e) => setSetName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={saveFlashcards} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+          <Dialog open={dialogOpen} onClose={handleCloseDialog} 
+            PaperProps={{
+              sx: { 
+                minWidth: '400px' // Widened dialog box
+              }
+            }}
+          >
+            <DialogTitle>Save Flashcards</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Enter a name for your flashcard set:
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Set Name"
+                fullWidth
+                value={setName}
+                onChange={(e) => setSetName(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} sx={{ color: '#3C6E71' }}>
+                Cancel
+              </Button>
+              <Button onClick={saveFlashcards} sx={{ color: '#3C6E71' }}>
+                Save
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      </Container>
+    </Box>
   );
 }

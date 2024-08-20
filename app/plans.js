@@ -35,7 +35,7 @@ const PricingPlans = () => (
           <Box
             sx={{
               p: 2,
-              backgroundColor: "#3C6E71",
+              backgroundColor: "#284B63",
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               boxShadow: 3,
@@ -64,7 +64,7 @@ const PricingPlans = () => (
             <Typography gutterBottom>
               Access to basic flashcard features and limited storage.
             </Typography>
-            <Button variant="contained" sx={{ mt: 2, backgroundColor: '#3C6E71', '&:hover': { backgroundColor: '#3C6E71' } }}>
+            <Button variant="contained" sx={{ mt: 2, backgroundColor: '#284B63', '&:hover': { backgroundColor: '#3C6E71' } }}>
               Choose Basic
             </Button>
           </Box>

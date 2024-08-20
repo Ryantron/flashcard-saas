@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from 'next/link';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [];
 
 function ResponsiveAppBar({ userPresent }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -80,13 +80,29 @@ function ResponsiveAppBar({ userPresent }) {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-              {userPresent && (<SignedOut>
-                <MenuItem>
-                  <Link href={'/sign-in'}>
-                    Login
-                  </Link>
-                </MenuItem>
-                </SignedOut>)}
+              <MenuItem>
+                <Link href={'/generate'} style={{ textDecoration: 'none' }}>
+                  <Typography textAlign="center" sx={{ color: '#353535' }}>Generate</Typography>
+                </Link>
+              </MenuItem>
+              {userPresent && (
+                <Box>
+                  <SignedOut>
+                    <MenuItem>
+                      <Link href={'/sign-in'} style={{ textDecoration: 'none' }}>
+                        <Typography textAlign="center" sx={{ color: '#353535' }}>Login</Typography>
+                      </Link>
+                    </MenuItem>
+                  </SignedOut>
+                  <SignedIn>
+                    <MenuItem>
+                      <Link href={'/flashcards'} style={{ textDecoration: 'none' }}>
+                        <Typography textAlign="center" sx={{ color: '#353535' }}>Collection</Typography>
+                      </Link>
+                    </MenuItem>
+                  </SignedIn>
+                </Box>
+              )}
             </Menu>
           </Box>
           <Typography
@@ -117,28 +133,43 @@ function ResponsiveAppBar({ userPresent }) {
                 {page}
               </Button>
             ))}
+            <Button 
+                href={'/generate'}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Generate
+            </Button>
+            <SignedIn>
+              <Button 
+                href={'/flashcards'}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Collection
+              </Button>
+            </SignedIn>
           </Box>
 
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-          {userPresent && (
-            <SignedOut>
-              <Button
-                color="inherit"
-                href="/sign-in"
-                sx={{
-                  backgroundColor: 'white',
-                  color: '#3C6E71',
-                  borderRadius: '20px',
-                  padding: '8px 26px',
-                  '&:hover': {
+            {userPresent && (
+              <SignedOut>
+                <Button
+                  color="inherit"
+                  href="/sign-in"
+                  sx={{
                     backgroundColor: 'white',
-                    opacity: 1
-                  }
-                }}
-              >
-                Login
-              </Button>
-            </SignedOut>)}
+                    color: '#3C6E71',
+                    borderRadius: '20px',
+                    padding: '8px 26px',
+                    '&:hover': {
+                      backgroundColor: 'white',
+                      opacity: 1
+                    }
+                  }}
+                >
+                  Login
+                </Button>
+              </SignedOut>
+            )}
           </Box>
           <SignedIn>
             <UserButton />

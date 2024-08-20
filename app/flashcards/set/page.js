@@ -7,6 +7,7 @@ import db from '@/firebase';
 import Flashcards from '@/components/flip-card';
 import { useUser } from '@clerk/nextjs'; // Import useUser from Clerk
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
+import ResponsiveAppBar from "@/components/navbar"
 
 export default function FlashcardSetPage() {
   const searchParams = useSearchParams();
@@ -72,23 +73,26 @@ export default function FlashcardSetPage() {
   }
 
   return (
-    <Container>
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Flashcard Set: {id}
-        </Typography>
-        {flashcards.length > 0 ? (
-          <Flashcards
-            flashcards={flashcards}
-            flipped={flipped}
-            handleCardClick={handleCardClick}
-          />
-        ) : (
-          <Typography variant="h6" component="div">
-            No flashcards found for this set.
+    <Box>
+      <ResponsiveAppBar userPresent={true}/>
+      <Container>
+        <Box sx={{ mt: '15vh', mb: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Flashcard Set: {id}
           </Typography>
-        )}
-      </Box>
-    </Container>
+          {flashcards.length > 0 ? (
+            <Flashcards
+              flashcards={flashcards}
+              flipped={flipped}
+              handleCardClick={handleCardClick}
+            />
+          ) : (
+            <Typography variant="h6" component="div">
+              No flashcards found for this set.
+            </Typography>
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 }

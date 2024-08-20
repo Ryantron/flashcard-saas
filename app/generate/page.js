@@ -25,7 +25,6 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import InputAdornment from '@mui/material/InputAdornment';
 import ResponsiveAppBar from "@/components/navbar";
 
-
 export default function Generate() {
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([]);
@@ -144,19 +143,35 @@ export default function Generate() {
                 handleCardClick={handleCardClick}
               />
               <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-                <Button
-                  variant="contained"
-                  sx={{ 
-                    backgroundColor: '#3C6E71', 
-                    borderRadius: 20,  // Rounder border
-                    '&:hover': { backgroundColor: '#2F575D' },
-                    px: 4,
-                    py: 1,
-                  }}
-                  onClick={handleOpenDialog}
-                >
-                  Save Flashcards
-                </Button>
+                {isSignedIn ? (
+                  <Button
+                    variant="contained"
+                    sx={{ 
+                      backgroundColor: '#3C6E71', 
+                      borderRadius: 20,  // Rounder border
+                      '&:hover': { backgroundColor: '#2F575D' },
+                      px: 4,
+                      py: 1,
+                    }}
+                    onClick={handleOpenDialog}
+                  >
+                    Save Flashcards
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    sx={{ 
+                      backgroundColor: '#3C6E71', 
+                      borderRadius: 20,  // Rounder border
+                      '&:hover': { backgroundColor: '#2F575D' },
+                      px: 4,
+                      py: 1,
+                    }}
+                    href="/sign-in"
+                  >
+                    Sign in to save flashcard set
+                  </Button>
+                )}
               </Box>
             </Paper>
           ) : (
